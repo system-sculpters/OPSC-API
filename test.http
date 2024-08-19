@@ -1,0 +1,13 @@
+GET http://localhost:3001/api/category/1 HTTP/1.1
+
+###
+POST http://localhost:3001/api/category/create HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "1",
+    "name": "name 1",
+    "color": "color 1",
+    "icon": "icon 1",
+    "TransactionType": "icon 1"
+}
