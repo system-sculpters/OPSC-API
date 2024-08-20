@@ -11,3 +11,11 @@ content-type: application/json
     "icon": "icon 1",
     "TransactionType": "icon 1"
 }
+
+###
+POST http://localhost:3001/api/translation/zu/translate HTTP/1.1
+content-type: application/json
+
+{
+    "text": "hello, my name is nathi"
+}
