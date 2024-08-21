@@ -5,12 +5,57 @@ POST http://localhost:3001/api/category/create HTTP/1.1
 content-type: application/json
 
 {
-    "userid": "1",
+    "userid": "id1",
     "name": "name 1",
     "color": "color 1",
     "icon": "icon 1",
     "TransactionType": "icon 1"
 }
+
+###
+GET http://localhost:3001/api/transaction/id1 HTTP/1.1
+
+###
+POST http://localhost:3001/api/transaction/create HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "id1",
+    "name": "name 1",
+    "amount": 2100.00,
+    "date": "12/12/2024",
+    "type": "Income",
+    "categoryId": "2v7OWOh3C1NmtTDVpmSL",
+    "isRecurring": true
+}
+
+
+###
+GET http://localhost:3001/api/goal/id1 HTTP/1.1
+
+###
+POST http://localhost:3001/api/goal/create HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "id1",
+    "name": "name 1",
+    "target_amount": 2100.00,
+    "current_amount": 0.00,
+    "Deadline": "12/12/2024",
+    "contribution_type": "monthly",
+    "contribution_amount": 21.57
+}
+
+
+
+###
+GET http://localhost:3001/api/analytics/id1/transactions/monthly HTTP/1.1
+
+###
+GET http://localhost:3001/api/analytics/id1/categories HTTP/1.1
+
+
 
 ###
 POST http://localhost:3001/api/translation/zu/translate HTTP/1.1

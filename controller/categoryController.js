@@ -4,36 +4,12 @@ const getCategories = async (req, res) =>{
     const {id} = req.params
     console.log(`this is the id: ${id}`)
     try {
-        // const snapshot = await Category.get();
-        // const list = snapshot.docs
-        //     .filter((doc) => doc.data().userid == `${id}`)
-        //     .map((doc) => ({ id: doc.id, ...doc.data() }));
-        // const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        // const snapshot = await Category.get();
-        // const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })); 
         const snapshot = await Category.get();
-
-        // Log the fetched documents for debugging
-        console.log("Fetched documents:", snapshot.docs.map(doc => doc.data()));
-
-        snapshot.docs.forEach(doc => {
-            console.log(`doc userid: ${doc.data().name}`);
-        });
-
-        snapshot.docs.forEach(doc => {
-            console.log('Document data:', doc.data());
-        });
-        
-        // Filter the documents based on the userid
         const list = snapshot.docs
-            .filter((doc) => {
-                console.log(`doc userid: ${doc.data().userid}`); // Log the userid of each document
-                return doc.data().userid === id;
-            })
-            .map((doc) => ({ id: doc.id, ...doc.data() }));
-
-        // Log the final list after filtering
-        console.log("Filtered list:", list);
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(doc => doc.data.userid === id);
+        console.log(list);
+    
         
         res.status(200).json({list});
     } catch (error) {
