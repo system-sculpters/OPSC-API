@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { reqTranslate } = require('../controller/translationController')
 
-router.post('/:langCode/translate', reqTranslate)
+router.post('/:sourceLang/:targetLang/translate', reqTranslate)
 
 module.exports = router

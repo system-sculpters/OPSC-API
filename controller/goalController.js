@@ -1,18 +1,19 @@
 const { Goal } = require('../config')
 
 const getGoals = async (req, res) =>{
-    const {id} = req.params
+    const { id } = req.params
     console.log(`this is the id: ${id}`)
     try {
-        const snapshot = await Goal.get();
+        const snapshot = await Goal
+        .where('userid', '==', id)
+        .get();
         
         const list = snapshot.docs
-            .map(doc => ({ id: doc.id, ...doc.data() }))
-            .filter(doc => doc.data.userid === id);
+            .map(doc => ({ id: doc.id, ...doc.data() }));
         
         console.log(list);
     
-        res.status(200).json({list});
+        res.status(200).json(list);
     } catch (error) {
         console.error('Error getting categories:', error);
         res.status(500).json({ error: 'Failed to fetch categories' });
@@ -21,9 +22,8 @@ const getGoals = async (req, res) =>{
 
 const createGoal = async (req, res) =>{
     const data = req.body;
-    //const { userid, name } = data
     try { 
-        await Goal.add({ data });
+        await Goal.add( data );
         //res.status(201).json({ message: 'Goal created successfully.' });
         res.send({ msg: "User Added" });
     } catch (error) {
@@ -34,10 +34,11 @@ const createGoal = async (req, res) =>{
 
 const updateGoal = async (req, res) =>{
     const { id } = req.params;
-    const { Name, target_amount, current_amount, deadline, contribution_type, contribution_amount } = req.body;
+    const updateData = req.body;
     try {
+        
         const GoalRef = Goal.doc(id);
-        await GoalRef.update({  Name, target_amount, current_amount, deadline, contribution_type, contribution_amount});
+        await GoalRef.update( updateData );
         res.status(200).json({ message: 'Goal updated successfully.' });
     } catch (error) {
         console.error('Error updating Goal:', error);

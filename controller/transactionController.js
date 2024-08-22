@@ -4,19 +4,17 @@ const getTransactions = async (req, res) => {
     const { id } = req.params;
     console.log(`Received request for user id: ${id}`);
     try {
-        const snapshot = await Transaction.get();
+        const snapshot = await Transaction
+        .where('userid', '==', id)
+        .get();
 
         // Filter transactions by `userid`
         const transactionsSnapshot = snapshot.docs
             .map(doc => {
-                const data = doc.data().data; // Access the nested `data` object
+                const data = doc.data(); // Access the nested `data` object
                 console.log(`Transaction data: ${JSON.stringify(data)}`);
                 return { id: doc.id, ...data };
             })
-            .filter(doc => {
-                console.log(`Checking if transaction userid ${doc.userid} matches with ${id}`);
-                return doc.userid === id;
-            });
 
         if (transactionsSnapshot.length === 0) {
             console.log('No matching transactions.');
@@ -64,10 +62,11 @@ const getTransactions = async (req, res) => {
 
 const createTransaction = async (req, res) =>{
     const data = req.body;
+    data.date = Date.now()
     console.log(data)
     //const { userid, name } = data
     try {
-        await Transaction.add({ data });
+        await Transaction.add( data );
         res.status(201).json({ message: 'Transaction created successfully.' });
     } catch (error) {
         console.error('Error creating Transaction:', error);
@@ -77,10 +76,11 @@ const createTransaction = async (req, res) =>{
 
 const updateTransaction = async (req, res) =>{
     const { id } = req.params;
-    const { name, amount,  date, type, categoryId, is_recurring } = req.body;
+    const updateData = req.body
+    
     try {
-        const TransactionRef = Transaction.doc(id);
-        await TransactionRef.update({ name, amount,  date, type, categoryId, is_recurring });
+        const TransactionRef = await Transaction.doc(id);
+        await TransactionRef.update( updateData);
         res.status(200).json({ message: 'Transaction updated successfully.' });
     } catch (error) {
         console.error('Error updating Transaction:', error);

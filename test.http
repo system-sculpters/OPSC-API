@@ -1,16 +1,30 @@
-GET http://localhost:3001/api/category/1 HTTP/1.1
+GET http://localhost:3001/api/category/id1 HTTP/1.1
 
 ###
 POST http://localhost:3001/api/category/create HTTP/1.1
 content-type: application/json
 
 {
-    "userid": "id1",
-    "name": "name 1",
+    "userid": "1",
+    "name": "cat 2",
     "color": "color 1",
     "icon": "icon 1",
-    "TransactionType": "icon 1"
+    "TransactionType": "Income"
 }
+
+###
+PUT http://localhost:3001/api/category/cnLZ7Gbuyy1RRI8Wx30E HTTP/1.1
+content-type: application/json
+
+{
+    
+    "icon": "icon 2",
+    "TransactionType": "Expense"
+}
+
+###
+DELETE  http://localhost:3001/api/category/nwz5ukswrZteheSd2Wos HTTP/1.1
+
 
 ###
 GET http://localhost:3001/api/transaction/id1 HTTP/1.1
@@ -21,14 +35,20 @@ content-type: application/json
 
 {
     "userid": "id1",
-    "name": "name 1",
-    "amount": 2100.00,
-    "date": "12/12/2024",
+    "name": "name 4",
+    "amount": 6000.00,
     "type": "Income",
-    "categoryId": "2v7OWOh3C1NmtTDVpmSL",
+    "categoryId": "cnLZ7Gbuyy1RRI8Wx30E",
     "isRecurring": true
 }
 
+###
+PUT http://localhost:3001/api/transaction/OFqTpwdGEycllBVabgIV HTTP/1.1
+content-type: application/json
+
+{    
+    "isRecurring": false
+}
 
 ###
 GET http://localhost:3001/api/goal/id1 HTTP/1.1
@@ -58,7 +78,7 @@ GET http://localhost:3001/api/analytics/id1/categories HTTP/1.1
 
 
 ###
-POST http://localhost:3001/api/translation/zu/translate HTTP/1.1
+POST http://localhost:3001/api/translation/en/af/translate HTTP/1.1
 content-type: application/json
 
 {
