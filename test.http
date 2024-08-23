@@ -75,7 +75,23 @@ GET http://localhost:3001/api/analytics/id1/transactions/monthly HTTP/1.1
 ###
 GET http://localhost:3001/api/analytics/id1/categories HTTP/1.1
 
+###
+GET http://localhost:3001/api/investment HTTP/1.1
 
+###
+GET http://localhost:3001/api/investment/update/logo HTTP/1.1
+
+###
+GET http://localhost:3001/api/investment/AAPL HTTP/1.1
+
+###
+GET http://localhost:3001/api/investment/top/stocks HTTP/1.1
+
+###
+GET http://localhost:3001/api/investment/top/batch-stocks HTTP/1.1
+
+###
+GET http://localhost:3001/api/investment/top/40 HTTP/1.1
 
 ###
 POST http://localhost:3001/api/translation/en/af/translate HTTP/1.1
