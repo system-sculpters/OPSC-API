@@ -142,3 +142,30 @@ content-type: application/json
 {
     "text": "hello, my name is nathi"
 }
+
+
+###
+GET http://localhost:3001/api/notification/pmp6jWuGYfPGS4FdlgQtWzKHHug1 HTTP/1.1
+
+
+###
+PUT http://localhost:3001/api/notification/pmp6jWuGYfPGS4FdlgQtWzKHHug1/register-token HTTP/1.1
+content-type: application/json
+
+{
+    "fcmToken": "mockToken123"
+}
+
+
+###
+POST http://localhost:3001/api/notification/create HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "pmp6jWuGYfPGS4FdlgQtWzKHHug1",
+    "title": "new goal",
+    "message": "goal 'new car' created successfully"
+}
+
+###
+PUT http://localhost:3001/api/notification/4U7RDCEwizoCGEgPyNn2 HTTP/1.1

@@ -16,6 +16,7 @@ const investmentRoutes = require('./routes/investmentRoutes');
 const goalRoutes = require('./routes/goalRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const translationRoutes = require('./routes/translateRoutes');
+const notificationRoutes = require('./routes/notificationRouter');
 
 
 
@@ -23,11 +24,12 @@ const translationRoutes = require('./routes/translateRoutes');
 app.use('/api/auth/', authRoute);
 app.use('/api/user/', userRoute);
 app.use('/api/transaction/', transactionRoute);
-app.use('/api/category', categoryRoutes);
-app.use('/api/investment', investmentRoutes);
-app.use('/api/goal', goalRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/translation', translationRoutes);
+app.use('/api/category/', categoryRoutes);
+app.use('/api/investment/', investmentRoutes);
+app.use('/api/goal/', goalRoutes);
+app.use('/api/analytics/', analyticsRoutes);
+app.use('/api/translation/', translationRoutes);
+app.use('/api/notification/', notificationRoutes);
 
 
 
