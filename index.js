@@ -8,8 +8,8 @@ app.use(cors());
 app.use(express.json());
  
 
-
-//const authRoute = require('./routes/authRoutes');
+const authRoute = require('./routes/authRoutes');
+const userRoute = require('./routes/userRoutes');
 const transactionRoute = require('./routes/transactionRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const investmentRoutes = require('./routes/investmentRoutes');
@@ -20,7 +20,8 @@ const translationRoutes = require('./routes/translateRoutes');
 
 
 
-//app.use('/api/auth/', authRoute);
+app.use('/api/auth/', authRoute);
+app.use('/api/user/', userRoute);
 app.use('/api/transaction/', transactionRoute);
 app.use('/api/category', categoryRoutes);
 app.use('/api/investment', investmentRoutes);

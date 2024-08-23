@@ -1,3 +1,45 @@
+POST http://localhost:3001/api/auth/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user 1",
+    "email": "user@gmail.com",
+    "password": "user123"
+}
+
+
+###
+POST http://localhost:3001/api/auth/signin HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user 1",
+    "password": "user123"
+}
+
+
+###
+PUT http://localhost:3001/api/user/pmp6jWuGYfPGS4FdlgQtWzKHHug1/update-email-and-username HTTP/1.1
+content-type: application/json
+
+{
+    "newUsername": "user 1",
+    "newEmail": "user@gmail.com"
+}
+
+ 
+
+###
+PUT http://localhost:3001/api/user/pmp6jWuGYfPGS4FdlgQtWzKHHug1/update-password HTTP/1.1
+content-type: application/json
+
+{
+    "newPassword": "user123"
+}
+
+
+
+###
 GET http://localhost:3001/api/category/id1 HTTP/1.1
 
 ###

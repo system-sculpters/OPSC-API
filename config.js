@@ -1,4 +1,12 @@
+const admin = require('firebase-admin');
 const firebase =  require('firebase')
+var serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  //databaseURL: "https://opsc7312-bd8a4.firebaseio.com"
+});
+
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -12,8 +20,9 @@ const firebaseConfig = {
 
   firebase.initializeApp(firebaseConfig)
 
+  const auth = firebase.auth();
   const db = firebase.firestore()
-
+  
   const User = db.collection('Users')
   const Transaction = db.collection('Transactions')
   const Category = db.collection('Categories')
@@ -21,4 +30,4 @@ const firebaseConfig = {
   const Notification = db.collection('Notifications')
   const Investment = db.collection('Investments')
 
-  module.exports = { User, Transaction, Category, Goal, Notification, Investment };
+  module.exports = { auth, admin, User, Transaction, Category, Goal, Notification, Investment };

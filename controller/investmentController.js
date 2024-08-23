@@ -242,7 +242,7 @@ const updateStockLogos = async (req, res) => {
 
 const getUserInvestments = async (req, res) => {
   const { id } = req.params
-
+ 
   try {
     const investments = Investment
       .where('userid', '==', id)
