@@ -1,20 +1,12 @@
 const router = require('express').Router()
-
-
-const { getUserInvestments, getStocks, getStockBySymbol, getTop40Stocks, getBatchStocks, updateStockLogos, getTop40Data } =  require('../controller/investmentController')
-
-router.get('/', getStocks);
+const { getPortfolioValue, getUserInvestments, buyInvestment, sellInvestment } =  require('../controller/investmentController')
 
 router.get('/:id', getUserInvestments);
 
-router.get('/top/stocks', getTop40Stocks);
+router.get('/:id/value', getPortfolioValue);
 
-router.get('/top/batch-stocks', getBatchStocks);
+router.post('/buy', buyInvestment)
 
-router.get('/top/40', getTop40Data);
-
-router.get('/update/logo', updateStockLogos);
-
-
+router.post('/sell', sellInvestment)
 
 module.exports = router

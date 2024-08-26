@@ -124,16 +124,16 @@ GET http://localhost:3001/api/investment HTTP/1.1
 GET http://localhost:3001/api/investment/update/logo HTTP/1.1
 
 ###
-GET http://localhost:3001/api/investment/AAPL HTTP/1.1
+GET http://localhost:3001/api/stocks/AAPL HTTP/1.1
 
 ###
-GET http://localhost:3001/api/investment/top/stocks HTTP/1.1
+GET http://localhost:3001/api/stocks/top/stocks HTTP/1.1
 
 ###
-GET http://localhost:3001/api/investment/top/batch-stocks HTTP/1.1
+GET http://localhost:3001/api/stocks/top/batch-stocks HTTP/1.1
 
 ###
-GET http://localhost:3001/api/investment/top/40 HTTP/1.1
+GET http://localhost:3001/api/stocks/top/40 HTTP/1.1
 
 ###
 POST http://localhost:3001/api/translation/en/af/translate HTTP/1.1
@@ -169,3 +169,31 @@ content-type: application/json
 
 ###
 PUT http://localhost:3001/api/notification/4U7RDCEwizoCGEgPyNn2 HTTP/1.1
+
+
+###
+GET http://localhost:3001/api/investment/pmp6jWuGYfPGS4FdlgQtWzKHHug1 HTTP/1.1
+
+###
+POST http://localhost:3001/api/investment/buy HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "pmp6jWuGYfPGS4FdlgQtWzKHHug1",
+    "symbol": "GOOGL",
+    "quantity": 1
+}
+
+###
+POST http://localhost:3001/api/investment/sell HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "pmp6jWuGYfPGS4FdlgQtWzKHHug1",
+    "symbol": "META",
+    "quantity": 1
+}
+
+
+###
+GET http://localhost:3001/api/investment/pmp6jWuGYfPGS4FdlgQtWzKHHug1/value HTTP/1.1
