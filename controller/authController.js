@@ -17,7 +17,7 @@ const signup = async (req, res) => {
             balance: 10_000
         })
 
-        res.status(200).json({ message: "user registration successful", uid: userRecord.uid });
+        res.status(200).json({ message: "user registration successful", id: userRecord.uid });
 
     } catch (error) {
         console.error('Error registering user:', error);
@@ -39,14 +39,14 @@ const signin = async (req, res) => {
         const userDoc = userSnapshot.docs[0];
         const user = userDoc.data();
         
-        console.log(user)
+        console.log(userDoc.id)
         // Sign in the user using email and password
         const userCredential = await auth.signInWithEmailAndPassword(user.email, password);
         const idToken = await userCredential.user.getIdToken();
 
         res.status(200).json({
             message: "User signed in successfully",
-            uid: userDoc.id,
+            id: userDoc.id,
             username: user.username,
             email: user.email,
             token: idToken
@@ -58,7 +58,18 @@ const signin = async (req, res) => {
 }
 
 const logout = async (req, res) => {
+    try {
+        // Assuming the user is authenticated and we have the auth token
+        const { token } = req.body;
 
+        // Invalidate the token (Firebase doesn't have a direct method to invalidate a token, so just clear it client-side)
+        await admin.auth().revokeRefreshTokens(token);
+
+        res.status(200).json({ message: "User logged out successfully" });
+    } catch (error) {
+        console.error('Error logging out user:', error);
+        res.status(500).json({ error: 'Failed to log out user' });
+    }
 }
 
 

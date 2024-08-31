@@ -1,8 +1,11 @@
 const router = require('express').Router()
-const { updateEmailAndUsername, updatePassword} = require('../controller/userController')
+const { verifyToken, verifyUser } = require('../middleware/authMiddleware')
+const { getUser, updateEmailAndUsername, updatePassword} = require('../controller/userController')
 
-router.put('/:uid/update-email-and-username', updateEmailAndUsername)
+router.get('/:id', verifyToken, verifyUser, getUser)
 
-router.put('/:uid/update-password', updatePassword)
+router.put('/:id/update-email-and-username', verifyToken, verifyUser, updateEmailAndUsername)
+
+router.put('/:id/update-password', verifyToken, verifyUser, updatePassword)
  
 module.exports = router
