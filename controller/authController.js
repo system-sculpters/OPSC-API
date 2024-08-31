@@ -64,7 +64,7 @@ const logout = async (req, res) => {
 
         // Verify the token to get the user's UID
         const decodedToken = await admin.auth().verifyIdToken(token);
-        const uid = decodedToken.uid;
+        const uid = decodedToken.id;
 
         // Revoke all refresh tokens for the specified user
         await admin.auth().revokeRefreshTokens(uid);
