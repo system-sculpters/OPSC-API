@@ -13,7 +13,11 @@ const verifyToken = async (req, res, next) => {
         next()
     } catch(error){
         console.error('Error verifying ID token:', error);
-        return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: "Token expired" });
+        } else {
+            return res.status(403).json({ message: "Invalid token" });
+        }    
     }
 }
 
