@@ -4,7 +4,7 @@ const { getCategories, createCategory, updateCategory, deleteCategory } =  requi
 
 router.get('/:id', verifyToken, verifyUser, getCategories);
 
-router.post('/create', verifyToken, verifyUser, createCategory);
+router.post('/create', verifyToken, createCategory);
 
 router.put('/:id', verifyToken, verifyUser, updateCategory);
 

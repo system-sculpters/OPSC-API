@@ -4,7 +4,7 @@ const { getTransactions, createTransaction, updateTransaction, deleteTransaction
 
 router.get('/:id', verifyToken, verifyUser,getTransactions);
 
-router.post('/create', verifyToken, verifyUser, createTransaction);
+router.post('/create', verifyToken, createTransaction);
  
 router.put('/:id', verifyToken, verifyUser, updateTransaction);
 

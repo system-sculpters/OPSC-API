@@ -4,7 +4,7 @@ const { verifyToken, verifyUser } = require('../middleware/authMiddleware');
 
 router.get('/:id', verifyToken, verifyUser,getNotifications);
 
-router.post('/create', verifyToken, verifyUser, createNotification)
+router.post('/create', verifyToken, createNotification)
 
 router.put('/:id', verifyToken, verifyUser, markAsRead)
 

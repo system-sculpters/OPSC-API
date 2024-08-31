@@ -4,7 +4,7 @@ const { verifyToken, verifyUser } = require('../middleware/authMiddleware');
 
 router.get('/:id', verifyToken, verifyUser, getGoals);
 
-router.post('/create', verifyToken, verifyUser, createGoal);
+router.post('/create', verifyToken, createGoal);
 
 router.put('/:id', verifyToken, verifyUser, updateGoal);
 

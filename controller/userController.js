@@ -4,19 +4,18 @@ const getUser = async (req, res) =>{
   const { id } = req.params
 
   try {
-    const userSnapshot = await User.where('username', '==', username).get();
+    const userSnapshot = await await User.doc(id).get();
 
     if (userSnapshot.empty) {
         return res.status(401).json({ error: 'Invalid username or password' });
     }
 
     // Assuming usernames are unique and there's only one user
-    const userDoc = userSnapshot.docs[0];
-    const user = userDoc.data();
+    const user = userSnapshot.data();
     
     res.status(200).json({
-        message: "User signed in successfully",
-        uid: userDoc.id,
+        message: "User details retrieved successfully",
+        id: userSnapshot.id,
         username: user.username,
         email: user.email
     });
