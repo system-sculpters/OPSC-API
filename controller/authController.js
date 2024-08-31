@@ -59,11 +59,15 @@ const signin = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        // Assuming the user is authenticated and we have the auth token
-        const { token } = req.body;
+        // Assuming the user is authenticated and the auth token is in the Authorization header
+        const token = req.header('Authorization').replace('Bearer ', '');
 
-        // Invalidate the token (Firebase doesn't have a direct method to invalidate a token, so just clear it client-side)
-        await admin.auth().revokeRefreshTokens(token);
+        // Verify the token to get the user's UID
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+
+        // Revoke all refresh tokens for the specified user
+        await admin.auth().revokeRefreshTokens(uid);
 
         res.status(200).json({ message: "User logged out successfully" });
     } catch (error) {
