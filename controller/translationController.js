@@ -32,7 +32,7 @@ const reqTranslate  = async (req, res) => {
 
     try {
         const result = await translateText(text, sourceLang, targetLang)
-        res.status(200).json({result})
+        res.status(200).json(result)
     } catch (error) {
         console.error('translating text Transaction:', error);
         res.status(500).json({ error: 'Failed to delete Transaction' });

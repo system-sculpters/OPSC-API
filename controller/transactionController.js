@@ -50,7 +50,7 @@ const getTransactions = async (req, res) => {
         }
 
         console.log(transactionsWithCategory);
-        res.status(200).json({ transactions: transactionsWithCategory });
+        res.status(200).json(transactionsWithCategory);
     } catch (error) {
         console.error('Error getting transactions and categories:', error);
         res.status(500).json({ error: 'Failed to fetch transactions and categories' });
