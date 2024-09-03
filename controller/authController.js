@@ -59,22 +59,32 @@ const signin = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        // Assuming the user is authenticated and the auth token is in the Authorization header
-        const token = req.header('Authorization').replace('Bearer ', '');
+        // Extract the token from the Authorization header
+        const token = req.headers.authorization?.split('Bearer ')[1];
+
+        if (!token) {
+            return res.status(401).json({ error: 'Authorization token is missing' });
+        }
 
         // Verify the token to get the user's UID
         const decodedToken = await admin.auth().verifyIdToken(token);
-        const id = decodedToken.id;
+        const uid = decodedToken.uid;
 
         // Revoke all refresh tokens for the specified user
-        await admin.auth().revokeRefreshTokens(id);
+        await admin.auth().revokeRefreshTokens(uid);
 
-        res.status(200).json({ message: "User logged out successfully" });
+        res.status(200).json({ message: 'User logged out successfully' });
     } catch (error) {
         console.error('Error logging out user:', error);
-        res.status(500).json({ error: 'Failed to log out user' });
+        if (error.code === 'auth/argument-error') {
+            return res.status(400).json({ error: 'Invalid token format' });
+        } else if (error.code === 'auth/id-token-expired') {
+            return res.status(401).json({ error: 'Token expired' });
+        } else {
+            return res.status(500).json({ error: 'Failed to log out user' });
+        }
     }
-}
+};
 
 
 module.exports = { signup, signin, logout }
