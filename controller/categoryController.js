@@ -21,9 +21,17 @@ const getCategories = async (req, res) =>{
 }
 
 const createCategory = async (req, res) =>{
-    const data = req.body;
+    const {color, icon, name, transactiontype, userid} = req.body;
+
+    const newCategory = {
+        color: color,
+        icon: icon,
+        name: name,
+        transactiontype: transactiontype, 
+        userid: userid
+    }
     try { 
-        await Category.add( data );
+        await Category.add( newCategory );
         //res.status(201).json({ message: 'Category created successfully.' });
         res.send({ message: "Category Added" });
     } catch (error) {

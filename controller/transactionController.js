@@ -61,12 +61,23 @@ const getTransactions = async (req, res) => {
 
 
 const createTransaction = async (req, res) =>{
-    const data = req.body;
-    data.date = Date.now()
-    console.log(data)
+    const { amount,  categoryId, 
+        isRecurring, name, type, userid} = req.body;
+    date = Date.now()
+
+    const newTransaction = {
+        amount: amount,  
+        categoryId: categoryId, 
+        date: date,
+        isRecurring: isRecurring, 
+        name: name, 
+        type: type, 
+        userid: userid
+    }
+    console.log(newTransaction)
     //const { userid, name } = data
     try {
-        await Transaction.add( data );
+        await Transaction.add( newTransaction );
         res.status(201).json({ message: 'Transaction created successfully.' });
     } catch (error) {
         console.error('Error creating Transaction:', error);

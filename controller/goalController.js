@@ -21,9 +21,25 @@ const getGoals = async (req, res) =>{
 }
 
 const createGoal = async (req, res) =>{
-    const data = req.body;
+    const {contributionamount,
+        contrubitiontype, 
+        currentamount,
+        deadline,
+        name,
+        targetamount,
+        userid
+    } = req.body;
     try { 
-        await Goal.add( data );
+        const newGoal = {
+            contributionamount: contributionamount,
+            contrubitiontype: contrubitiontype,
+            currentamount: currentamount,
+            deadline: deadline,
+            name: name,
+            targetamount: targetamount, 
+            userid: userid
+        }
+        await Goal.add( newGoal );
         //res.status(201).json({ message: 'Goal created successfully.' });
         res.send({ msg: "User Added" });
     } catch (error) {
