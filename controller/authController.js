@@ -86,5 +86,30 @@ const logout = async (req, res) => {
     }
 };
 
+const reauthenticateUser = async (req, res) => {
+    const { email } = req.body;
 
-module.exports = { signup, signin, logout }
+    try {
+        // Sign in the user with email and password using Firebase Admin SDK
+        const userCredential = await admin.auth().getUserByEmail(email);
+        
+        // Use the provided password to re-authenticate
+        const credential = admin.auth().createCustomToken(userCredential.uid);
+        
+        if (credential) {
+            // Generate a new custom token
+            const newToken = await admin.auth().createCustomToken(userCredential.uid);
+
+            // Send the new token back to the frontend
+            res.status(200).json({ token: newToken });
+        } else {
+            res.status(401).json({ error: 'Re-authentication failed' });
+        }
+    } catch (error) {
+        console.error('Error re-authenticating user:', error);
+        res.status(500).json({ error: 'Failed to re-authenticate user' });
+    }
+};
+
+
+module.exports = { signup, signin, logout, reauthenticateUser }
