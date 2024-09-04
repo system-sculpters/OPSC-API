@@ -62,14 +62,14 @@ const getTransactions = async (req, res) => {
 
 const createTransaction = async (req, res) =>{
     const { amount,  categoryId, 
-        isRecurring, name, type, userid} = req.body;
+        isrecurring, name, type, userid} = req.body;
     date = Date.now()
 
     const newTransaction = {
         amount: amount,  
         categoryId: categoryId, 
         date: date,
-        isRecurring: isRecurring, 
+        isrecurring: isrecurring, 
         name: name, 
         type: type, 
         userid: userid
