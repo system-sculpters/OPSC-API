@@ -1,23 +1,23 @@
 const { admin } = require('../config');
 
 const verifyToken = async (req, res, next) => {
-    const idToken = req.headers.authorization?.split('Bearer ')[1]
+    const token = req.headers.authorization?.split('Bearer ')[1]
 
-    if(!idToken){
+    if(!token){
         return res.status(401).json({ error: 'Unauthorized: No token provided'});
     }
 
     try{
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        req.user = decodedToken; 
-        next()
+        jwt.verify(token, process.env.POLYGON_API_KEY, (err, decoded) => {
+               
+            // Add the decoded user info to the request object
+            req.user = decoded;
+            next();
+        });
     } catch(error){
         console.error('Error verifying ID token:', error);
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({ message: "Token expired" });
-        } else {
-            return res.status(403).json({ message: "Invalid token" });
-        }    
+        return res.status(403).json({ message: "Invalid token" });
+          
     }
 }
 

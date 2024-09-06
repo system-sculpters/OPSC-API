@@ -1,5 +1,5 @@
 const { admin, auth, User } = require('../config')
-
+const jwt = require('jsonwebtoken')
 
 const signup = async (req, res) => {
     const { username, email, password } = req.body
@@ -42,14 +42,22 @@ const signin = async (req, res) => {
         console.log(userDoc.id)
         // Sign in the user using email and password
         const userCredential = await auth.signInWithEmailAndPassword(user.email, password);
-        const idToken = await userCredential.user.getIdToken();
+        const userData = await userCredential.user
+
+        const payload = {
+            uid: userData.uid,
+            email: userData.email
+        };
+
+        // Sign a JWT with a 3-day expiration
+        const token = jwt.sign(payload, process.env.POLYGON_API_KEY, { expiresIn: '3d' });
 
         res.status(200).json({
             message: "User signed in successfully",
             id: userDoc.id,
             username: user.username,
             email: user.email,
-            token: idToken
+            token: token
         });
     } catch (error) { 
         console.error('Error signing in user:', error);
@@ -87,29 +95,47 @@ const logout = async (req, res) => {
 };
 
 const reauthenticateUser = async (req, res) => {
-    const { email } = req.body;
+    const {refreshToken} = req.body;
 
     try {
-        // Sign in the user with email and password using Firebase Admin SDK
-        const userCredential = await admin.auth().getUserByEmail(email);
-        
-        // Use the provided password to re-authenticate
-        const credential = admin.auth().createCustomToken(userCredential.uid);
-        
-        if (credential) {
-            // Generate a new custom token
-            const newToken = await admin.auth().createCustomToken(userCredential.uid);
-
-            // Send the new token back to the frontend
-            res.status(200).json({ token: newToken });
-        } else {
-            res.status(401).json({ error: 'Re-authentication failed' });
-        }
+        const newTokens = await refreshIdToken(refreshToken);
+        res.status(200).json({
+        idToken: newTokens.idToken,
+        refreshToken: newTokens.refreshToken, // Optionally update client-side refresh token
+        expiresIn: newTokens.expiresIn,
+        });
     } catch (error) {
-        console.error('Error re-authenticating user:', error);
-        res.status(500).json({ error: 'Failed to re-authenticate user' });
+        res.status(400).json({ error: error.message });
     }
 };
+
+
+const refreshIdToken = async (refreshToken) => {
+    const apiKey = process.env.FIREBASE_API_KEY; // Use your Firebase API key here
+    const refreshTokenUrl = `https://securetoken.googleapis.com/v1/token?key=${apiKey}`;
+  
+    const response = await fetch(refreshTokenUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      }),
+    });
+  
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        idToken: data.id_token,
+        refreshToken: data.refresh_token, // Updated refresh token
+        expiresIn: data.expires_in, // Time until new token expires
+      };
+    } else {
+      throw new Error(`Error refreshing token: ${data.error.message}`);
+    }
+  };
 
 
 module.exports = { signup, signin, logout, reauthenticateUser }
