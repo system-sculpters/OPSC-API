@@ -1,4 +1,5 @@
 const { admin } = require('../config');
+const jwt = require('jsonwebtoken')
 
 const verifyToken = async (req, res, next) => {
     const token = req.headers.authorization?.split('Bearer ')[1]
