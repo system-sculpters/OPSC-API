@@ -48,20 +48,20 @@ const updateCategory = async (req, res) =>{
     const updatedAt = Date.now()
 
     const updatedCategory = {
-        color: color,
-        icon: icon,
-        name: name,
-        transactiontype: transactiontype,
-        updatedAt: updatedAt
-    }
+        ...(color && { color }),
+        ...(icon && { icon }),
+        ...(name && { name }),
+        ...(transactiontype && { transactiontype }),
+        updatedAt
+    };
     
     try {
         const CategoryRef = await Category.doc(id);
         await CategoryRef.update( updatedCategory );
-        res.status(200).json({ message: 'Transaction updated successfully.' });
+        res.status(200).json({ message: 'Category updated successfully.' });
     } catch (error) {
-        console.error('Error updating Transaction:', error);
-        res.status(500).json({ error: 'Failed to update Transaction' });
+        console.error('Error updating Category:', error);
+        res.status(500).json({ error: 'Failed to update Category' });
     }
 }
 

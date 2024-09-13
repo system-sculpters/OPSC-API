@@ -2,7 +2,7 @@ const { admin, messaging, Notification, User } = require('../config')
 
 
 const sendNotification = async (token, title, body) => {
-    
+
     const message = {
         notification: {
             title: title,
@@ -35,7 +35,7 @@ const notifyUser = async (userid, title, body) => {
         console.error('Error notifying user:', error);
     }
 }
-
+ 
 const createNotification = async (req, res) => {
     const { userid, title, message } = req.body;
 

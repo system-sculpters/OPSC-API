@@ -28,10 +28,10 @@ const createGoal = async (req, res) =>{
         name,
         targetamount,
         userid
-    } = req.body;
+    } = req.body;  
 
     const createdAt = Date.now()
-    
+
     try { 
         const newGoal = {
             contributionamount: contributionamount,
