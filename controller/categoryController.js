@@ -22,13 +22,15 @@ const getCategories = async (req, res) =>{
 
 const createCategory = async (req, res) =>{
     const {color, icon, name, transactiontype, userid} = req.body;
+    const createdAt = Date.now()
 
     const newCategory = {
         color: color,
         icon: icon,
         name: name,
         transactiontype: transactiontype, 
-        userid: userid
+        userid: userid,
+        createdAt: createdAt
     }
     try { 
         await Category.add( newCategory );
@@ -42,11 +44,20 @@ const createCategory = async (req, res) =>{
 
 const updateCategory = async (req, res) =>{
     const { id } = req.params;
-    const data = req.body
+    const { color, icon, name, transactiontype } = req.body;
+    const updatedAt = Date.now()
+
+    const updatedCategory = {
+        color: color,
+        icon: icon,
+        name: name,
+        transactiontype: transactiontype,
+        updatedAt: updatedAt
+    }
     
     try {
         const CategoryRef = await Category.doc(id);
-        await CategoryRef.update( data );
+        await CategoryRef.update( updatedCategory );
         res.status(200).json({ message: 'Transaction updated successfully.' });
     } catch (error) {
         console.error('Error updating Transaction:', error);

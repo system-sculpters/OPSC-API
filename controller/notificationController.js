@@ -2,6 +2,7 @@ const { admin, messaging, Notification, User } = require('../config')
 
 
 const sendNotification = async (token, title, body) => {
+    
     const message = {
         notification: {
             title: title,

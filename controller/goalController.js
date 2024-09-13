@@ -29,6 +29,9 @@ const createGoal = async (req, res) =>{
         targetamount,
         userid
     } = req.body;
+
+    const createdAt = Date.now()
+    
     try { 
         const newGoal = {
             contributionamount: contributionamount,
@@ -37,7 +40,8 @@ const createGoal = async (req, res) =>{
             deadline: deadline,
             name: name,
             targetamount: targetamount, 
-            userid: userid
+            userid: userid,
+            createdAt: createdAt
         }
         await Goal.add( newGoal );
         //res.status(201).json({ message: 'Goal created successfully.' });
@@ -50,11 +54,27 @@ const createGoal = async (req, res) =>{
 
 const updateGoal = async (req, res) =>{
     const { id } = req.params;
-    const updateData = req.body;
+
+    const { contributionamount,
+        contrubitiontype, 
+        currentamount,
+        deadline,
+        name,
+        targetamount } = req.body;
+
+    const updatedAt = Date.now()
     try {
-        
+        const updatedGoal = {
+            contributionamount: contributionamount,
+            contrubitiontype: contrubitiontype,
+            currentamount: currentamount,
+            deadline: deadline,
+            name: name,
+            targetamount: targetamount,
+            updatedAt: updatedAt
+        }
         const GoalRef = Goal.doc(id);
-        await GoalRef.update( updateData );
+        await GoalRef.update( updatedGoal );
         res.status(200).json({ message: 'Goal updated successfully.' });
     } catch (error) {
         console.error('Error updating Goal:', error);

@@ -30,6 +30,7 @@ const getUser = async (req, res) =>{
 const updateEmailAndUsername = async (req, res) => {
     const { id } = req.params
     const { newEmail, newUsername } = req.body
+    const updatedAt = Date.now()
     try {
       // Update the user's email and username in Firebase Auth
       await admin.auth().updateUser(id, {
@@ -41,6 +42,7 @@ const updateEmailAndUsername = async (req, res) => {
       await User.doc(id).update({
         email: newEmail,
         username: newUsername,
+        updatedAt: updatedAt
       });
   
       console.log('Successfully updated email and username.');

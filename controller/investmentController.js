@@ -23,7 +23,6 @@ const getUserInvestments = async (req, res) => {
   
 const buyInvestment = async (req, res) => {
     const { userid, symbol, quantity } = req.body;
-  
     try {
         // Get the user's current balance
         const userDoc = await User.doc(userid).get();

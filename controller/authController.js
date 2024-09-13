@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const signup = async (req, res) => {
     const { username, email, password } = req.body
-
+    const createdAt = Date.now()
     try { 
         const userRecord = await admin.auth().createUser({
             email: email,
@@ -14,7 +14,8 @@ const signup = async (req, res) => {
         await User.doc(userRecord.uid).set({
             username: username,
             email: email,
-            balance: 10_000
+            balance: 10_000, 
+            createdAt: createdAt    
         })
 
         res.status(200).json({ message: "user registration successful", id: userRecord.uid });

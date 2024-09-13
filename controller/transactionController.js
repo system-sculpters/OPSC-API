@@ -87,11 +87,23 @@ const createTransaction = async (req, res) =>{
 
 const updateTransaction = async (req, res) =>{
     const { id } = req.params;
-    const updateData = req.body
+    const { amount,  categoryId, 
+        isrecurring, name, type } = req.body;
+
+    const updatedAt = Date.now()
     
     try {
+
+        const updatedTransaction = {
+            amount: amount,  
+            categoryId: categoryId,
+            isrecurring: isrecurring, 
+            name: name, 
+            type: type, 
+            updatedAt: updatedAt
+        }
         const TransactionRef = await Transaction.doc(id);
-        await TransactionRef.update( updateData);
+        await TransactionRef.update( updatedTransaction );
         res.status(200).json({ message: 'Transaction updated successfully.' });
     } catch (error) {
         console.error('Error updating Transaction:', error);
