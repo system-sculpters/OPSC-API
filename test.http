@@ -78,8 +78,8 @@ DELETE  http://localhost:3001/api/category/nwz5ukswrZteheSd2Wos HTTP/1.1
 
 
 ###
-GET http://localhost:3001/api/transaction/C4Xq7PBLLQR0ZfoqMYX7o9T2Gp32 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJDNFhxN1BCTExRUjBaZm9xTVlYN285VDJHcDMyIiwiZW1haWwiOiJ1c2VyM0BnbWFpbC5jb20iLCJpYXQiOjE3MjU1OTA2NjcsImV4cCI6MTcyNTg0OTg2N30.R7DaY6g-Bupy_sMJ9zQMJuLBel4_Z0yeFNBQuKj1KFY
+GET http://localhost:3001/api/transaction/0AqZwpqX2seecn6855llTwlnr9J2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwQXFad3BxWDJzZWVjbjY4NTVsbFR3bG5yOUoyIiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI0NzgyMSwiZXhwIjoxNzI2NTA3MDIxfQ.IOXioPa-MG4gGgj53HL1B3ZOiqi0mFm_JXSHngeg3vo
 
 ###
 POST http://localhost:3001/api/transaction/create HTTP/1.1
@@ -123,10 +123,16 @@ content-type: application/json
 
 
 ###
-GET http://localhost:3001/api/analytics/id1/transactions/monthly HTTP/1.1
+GET http://localhost:3001/api/analytics/0AqZwpqX2seecn6855llTwlnr9J2/transactions/monthly HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwQXFad3BxWDJzZWVjbjY4NTVsbFR3bG5yOUoyIiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI0NzgyMSwiZXhwIjoxNzI2NTA3MDIxfQ.IOXioPa-MG4gGgj53HL1B3ZOiqi0mFm_JXSHngeg3vo
 
 ###
-GET http://localhost:3001/api/analytics/id1/categories HTTP/1.1
+GET http://localhost:3001/api/analytics/0AqZwpqX2seecn6855llTwlnr9J2/transactions/weekly HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwQXFad3BxWDJzZWVjbjY4NTVsbFR3bG5yOUoyIiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI0NzgyMSwiZXhwIjoxNzI2NTA3MDIxfQ.IOXioPa-MG4gGgj53HL1B3ZOiqi0mFm_JXSHngeg3vo
+
+###
+GET http://localhost:3001/api/analytics/0AqZwpqX2seecn6855llTwlnr9J2/categories HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwQXFad3BxWDJzZWVjbjY4NTVsbFR3bG5yOUoyIiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI0NzgyMSwiZXhwIjoxNzI2NTA3MDIxfQ.IOXioPa-MG4gGgj53HL1B3ZOiqi0mFm_JXSHngeg3vo
 
 ###
 GET http://localhost:3001/api/investment HTTP/1.1

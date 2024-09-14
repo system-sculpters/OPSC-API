@@ -7,22 +7,15 @@ const getTransactionsByMonth = async (req, res) => {
 
     try {
         const snapshot = await Transaction
-        .where('userid', '==', id) // Access the nested `userid
-        //.where('date', '>=', twelveMonthsAgo.getTime()) 
-        .get();
+            .where('userid', '==', id) // Access the nested `userid`
+            .where('date', '>=', twelveMonthsAgo.getTime())
+            .get();
 
         console.log(`Found ${snapshot.size} transactions for userid: ${id}`);
-        // const allTransactionsSnapshot = await Transaction.get();
-
-        // allTransactionsSnapshot.docs.forEach(doc => {
-        //     const data = doc.data();
-        //     console.log(`ransaction: ${JSON.stringify(doc.data())}`);
-        // });
         
-       
         if (snapshot.empty) {
             console.log('No matching transactions.');
-            return res.status(200).json({ monthlyTransactions: [] });
+            return res.status(200).json([]);
         }
 
         const transactions = snapshot.docs.map(doc => {
@@ -38,11 +31,16 @@ const getTransactionsByMonth = async (req, res) => {
             const monthYear = `${transaction.date.getMonth() + 1}-${transaction.date.getFullYear()}`;
 
             if (!acc[monthYear]) {
-                acc[monthYear] = { total: 0, count: 0};
+                acc[monthYear] = { income: 0, expense: 0, count: 0 };
             }
 
-            acc[monthYear].total += transaction.amount; 
-            acc[monthYear].count += 1// Increment the count
+            if (transaction.type === 'INCOME') {
+                acc[monthYear].income += transaction.amount; // Add to income
+            } else if (transaction.type === 'EXPENSE') {
+                acc[monthYear].expense += transaction.amount; // Add to expense
+            }
+
+            acc[monthYear].count += 1; // Increment the count
             return acc;
         }, {});
 
@@ -53,18 +51,20 @@ const getTransactionsByMonth = async (req, res) => {
             const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
 
             monthlyTransactions.push({
-                month: date.toLocaleString('default', { month: 'long', year: 'numeric' }).substring(0, 3),
-                total: transactionsByMonth[monthYear]?.total || 0,
+                label: date.toLocaleString('default', { month: 'long', year: 'numeric' }).substring(0, 3),
+                income: transactionsByMonth[monthYear]?.income || 0,
+                expense: transactionsByMonth[monthYear]?.expense || 0,
                 count: transactionsByMonth[monthYear]?.count || 0
             });
         }
 
-        res.status(200).json({ monthlyTransactions });
+        res.status(200).json(monthlyTransactions);
     } catch (error) {
         console.error('Error getting transactions by month:', error);
         res.status(500).json({ error: 'Failed to fetch transactions by month' });
     }
 };
+
 
 
 
@@ -76,7 +76,8 @@ const getExpenseCategoryStats = async (req, res) => {
         const categorySnapshot = await Category.where('userid', '==', id).get();
         const categories = categorySnapshot.docs.map(doc => ({
             id: doc.id,
-            name: doc.data().name, // Assuming each category has a 'name' field
+            name: doc.data().name, 
+            color: doc.data().color,
         }));
         //return res.status(200).json({ categories });
 
@@ -89,17 +90,19 @@ const getExpenseCategoryStats = async (req, res) => {
             // Return all categories with zero amounts
             const emptyCategories = categories.map(category => ({
                 categoryId: category.id,
-                categoryName: category.name,
+                name: category.name,
+                color: category.color,
                 totalAmount: 0,
                 transactionCount: 0,
+                
             }));
-            return res.status(200).json({ categories: emptyCategories });
+            return res.status(200).json(  emptyCategories );
         }
 
         const transactions = transactionSnapshot.docs.map(doc => doc.data());
         console.log(transactions)
         // Filter only expenses
-        const expenses = transactions.filter(transaction => transaction.type === 'Expense');
+        const expenses = transactions.filter(transaction => transaction.type === 'EXPENSE');
         console.log(`Expenses: ${JSON.stringify(expenses)}`)
         // Calculate the total amount spent per category
         const categoryStats = expenses.reduce((acc, expense) => {
@@ -118,13 +121,15 @@ const getExpenseCategoryStats = async (req, res) => {
 
         // Combine all categories with calculated stats, ensuring all categories are included
         const formattedStats = categories.map(category => ({
-            categoryId: category.id,
-            categoryName: category.name,
-            totalAmount: categoryStats[category.id]?.total || 0,
-            transactionCount: categoryStats[category.id]?.count || 0,
-        }));
+                categoryId: category.id,
+                name: category.name,
+                color: category.color,
+                totalAmount: categoryStats[category.id]?.total || 0,
+                transactionCount: categoryStats[category.id]?.count || 0,
+            }
+        ));
 
-        res.status(200).json({ categories: formattedStats });
+        res.status(200).json(formattedStats);
     } catch (error) {
         console.error('Error getting expense category stats:', error);
         res.status(500).json({ error: 'Failed to fetch expense category stats' });
@@ -132,7 +137,71 @@ const getExpenseCategoryStats = async (req, res) => {
 };
 
 
+const getTransactionsForLast7Days = async (req, res) => {
+    const { id } = req.params;
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6); // 7 days ago, inclusive of today
+
+    try {
+        const snapshot = await Transaction
+            .where('userid', '==', id)
+            .where('date', '>=', sevenDaysAgo.getTime())
+            .get();
+
+        console.log(`Found ${snapshot.size} transactions for userid: ${id}`);
+
+        if (snapshot.empty) {
+            console.log('No matching transactions.');
+            return res.status(200).json([]);
+        }
+
+        const transactions = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                ...data,
+                date: new Date(data.date), // Assuming `data.date` is stored as a timestamp
+            };
+        });
+
+        // Group Transactions by Day of the Week
+        const transactionsByDay = transactions.reduce((acc, transaction) => {
+            const day = transaction.date.toLocaleString('default', { weekday: 'short' }); // Get weekday, e.g., 'Mon'
+
+            if (!acc[day]) {
+                acc[day] = { income: 0, expense: 0, count: 0 };
+            }
+
+            if (transaction.type === 'INCOME') {
+                acc[day].income += transaction.amount; // Add to income
+            } else if (transaction.type === 'EXPENSE') {
+                acc[day].expense += transaction.amount; // Add to expense
+            }
+
+            acc[day].count += 1; // Increment the count
+            return acc;
+        }, {});
+
+        // Fill in Missing Days
+        const dailyTransactions = [];
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+            const day = date.toLocaleString('default', { weekday: 'short' });
+
+            dailyTransactions.push({
+                label: day,
+                income: transactionsByDay[day]?.income || 0,
+                expense: transactionsByDay[day]?.expense || 0,
+                count: transactionsByDay[day]?.count || 0
+            });
+        }
+
+        res.status(200).json(dailyTransactions);
+    } catch (error) {
+        console.error('Error getting transactions for last 7 days:', error);
+        res.status(500).json({ error: 'Failed to fetch transactions for last 7 days' });
+    }
+};
 
 
 
-module.exports = { getTransactionsByMonth, getExpenseCategoryStats }
+module.exports = { getTransactionsByMonth, getExpenseCategoryStats, getTransactionsForLast7Days }
