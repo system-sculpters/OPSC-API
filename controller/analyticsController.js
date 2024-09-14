@@ -203,5 +203,136 @@ const getTransactionsForLast7Days = async (req, res) => {
 };
 
 
+const getDashboardData = async (req, res) => {
+    const { id } = req.params;
+    const now = new Date();
+    const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1); // Start of the month 12 months ago
+    const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6); // 7 days ago
 
-module.exports = { getTransactionsByMonth, getExpenseCategoryStats, getTransactionsForLast7Days }
+    try {
+        // Fetch transactions for the last 12 months
+        const transactionSnapshot = await Transaction
+            .where('userid', '==', id)
+            .where('date', '>=', twelveMonthsAgo.getTime())
+            .get();
+        
+        if (transactionSnapshot.empty) {
+            console.log(`No transactions found for userid: ${id}`);
+            return res.status(200).json({
+                transactionsByMonth: [],
+                dailyTransactions: [],
+                categoryStats: []
+            });
+        }
+
+        const transactions = transactionSnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                ...data,
+                date: new Date(data.date), // Assuming `data.date` is stored as a timestamp
+            };
+        });
+
+        // Group Transactions by Month and Year (for 12 months)
+        const transactionsByMonth = transactions.reduce((acc, transaction) => {
+            const monthYear = `${transaction.date.getMonth() + 1}-${transaction.date.getFullYear()}`;
+            if (!acc[monthYear]) {
+                acc[monthYear] = { income: 0, expense: 0, count: 0 };
+            }
+            if (transaction.type === 'INCOME') {
+                acc[monthYear].income += transaction.amount;
+            } else if (transaction.type === 'EXPENSE') {
+                acc[monthYear].expense += transaction.amount;
+            }
+            acc[monthYear].count += 1;
+            return acc;
+        }, {});
+
+        // Fill in Missing Months
+        const monthlyTransactions = [];
+        for (let i = 0; i < 12; i++) {
+            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+            monthlyTransactions.push({
+                label: date.toLocaleString('default', { month: 'long', year: 'numeric' }).substring(0, 3),
+                income: transactionsByMonth[monthYear]?.income || 0,
+                expense: transactionsByMonth[monthYear]?.expense || 0,
+                count: transactionsByMonth[monthYear]?.count || 0
+            });
+        }
+
+        // Group Transactions by Day of the Week (for last 7 days)
+        const transactionsByDay = transactions.reduce((acc, transaction) => {
+            const day = transaction.date.toLocaleString('default', { weekday: 'short' });
+            if (!acc[day]) {
+                acc[day] = { income: 0, expense: 0, count: 0 };
+            }
+            if (transaction.type === 'INCOME') {
+                acc[day].income += transaction.amount;
+            } else if (transaction.type === 'EXPENSE') {
+                acc[day].expense += transaction.amount;
+            }
+            acc[day].count += 1;
+            return acc;
+        }, {});
+
+        // Fill in Missing Days
+        const dailyTransactions = [];
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+            const day = date.toLocaleString('default', { weekday: 'short' });
+            dailyTransactions.push({
+                label: day,
+                income: transactionsByDay[day]?.income || 0,
+                expense: transactionsByDay[day]?.expense || 0,
+                count: transactionsByDay[day]?.count || 0
+            });
+        }
+
+        // Fetch all categories for expense stats
+        const categorySnapshot = await Category.where('userid', '==', id).get();
+        const categories = categorySnapshot.docs.map(doc => ({
+            id: doc.id,
+            name: doc.data().name, 
+            color: doc.data().color,
+        }));
+
+        // Filter only expenses for category stats
+        const expenses = transactions.filter(transaction => transaction.type === 'EXPENSE');
+
+        // Calculate total amount per category
+        const categoryStats = expenses.reduce((acc, expense) => {
+            const { categoryId, amount } = expense;
+            if (!acc[categoryId]) {
+                acc[categoryId] = { total: 0, count: 0 };
+            }
+            acc[categoryId].total += amount;
+            acc[categoryId].count += 1;
+            return acc;
+        }, {});
+
+        // Combine all categories with calculated stats
+        const formattedStats = categories.map(category => ({
+            categoryId: category.id,
+            name: category.name,
+            color: category.color,
+            totalAmount: categoryStats[category.id]?.total || 0,
+            transactionCount: categoryStats[category.id]?.count || 0
+        }));
+
+        // Send all the data in one response
+        res.status(200).json({
+            transactionsByMonth: monthlyTransactions,
+            dailyTransactions: dailyTransactions,
+            categoryStats: formattedStats
+        });
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        res.status(500).json({ error: 'Failed to fetch dashboard data' });
+    }
+};
+
+
+
+
+module.exports = { getTransactionsByMonth, getExpenseCategoryStats, getTransactionsForLast7Days, getDashboardData }

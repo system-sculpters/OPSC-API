@@ -120,6 +120,9 @@ content-type: application/json
     "contribution_amount": 21.57
 }
 
+###
+GET http://localhost:3001/api/analytics/0AqZwpqX2seecn6855llTwlnr9J2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwQXFad3BxWDJzZWVjbjY4NTVsbFR3bG5yOUoyIiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI0NzgyMSwiZXhwIjoxNzI2NTA3MDIxfQ.IOXioPa-MG4gGgj53HL1B3ZOiqi0mFm_JXSHngeg3vo
 
 
 ###
