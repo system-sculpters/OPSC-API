@@ -127,7 +127,7 @@ const signinWithSSO = async (req, res) => {
         const userDoc = userSnapshot.docs[0];
         const user = userDoc.data();
         
-        //console.log(userDoc.id);
+        //console.log(userDoc.id); 
 
         // Sign in the user using email
         const userCredential = await admin.auth().getUserByEmail(user.email);
