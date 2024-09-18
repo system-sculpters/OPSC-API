@@ -17,6 +17,27 @@ content-type: application/json
     "password": "user123"
 } 
 
+
+###
+POST http://localhost:3001/api/auth/signin-sso HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user 1",
+    "password": "user123"
+} 
+
+###
+POST http://localhost:3001/api/auth/signup-sso HTTP/1.1
+content-type: application/json
+
+{
+    "username": "user 4",
+    "email": "user4@gmail.com",
+    "password": "user123"
+} 
+
+
 ###
 POST http://localhost:3001/api/auth/verify-token HTTP/1.1
 Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjExYzhiMmRmNGM1NTlkMjhjOWRlNWQ0MTAxNDFiMzBkOWUyYmNlM2IiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoidXNlcjEiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vb3BzYzczMTItYmQ4YTQiLCJhdWQiOiJvcHNjNzMxMi1iZDhhNCIsImF1dGhfdGltZSI6MTcyNTE0NTI1MSwidXNlcl9pZCI6InBtcDZqV3VHWWZQR1M0RmRsZ1F0V3pLSEh1ZzEiLCJzdWIiOiJwbXA2ald1R1lmUEdTNEZkbGdRdFd6S0hIdWcxIiwiaWF0IjoxNzI1MTQ1MjUxLCJleHAiOjE3MjUxNDg4NTEsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbInVzZXIxQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Mct4q85Be9KvQLAKXvlORgDe_xfDjoe0JHY16-GGn0OqtkqNI-iMR6a7CP-OTbiyulngF3jG9qo5J16eAE_PpmKoR4bedqz2_PMWFPdfmcvDW_Evj7MjEGqigygdGrqYaUsIjCCWAmzGutT3vyFfxBlpxtwVh3g3q2IjDtWlNhSokKvUQe6DfXCZbMl5-eEqFrcn1tdKqqy0xrz_ui84OdE0lW0HEphuoykEDGIqT7pfwLfgXrImlX-q4avtLZYC5GUrayK4CeyFyi_cZqtgxnWuwEpu9XeiSVfFhNecTFooSbvhb_syCAnhW8qWWv66Ooq6uNw3h1Rm8A_Fk4uYlw
