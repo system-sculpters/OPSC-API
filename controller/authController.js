@@ -18,7 +18,7 @@ const signup = async (req, res) => {
             createdAt: createdAt    
         })
 
-        res.status(200).json({ message: "user registration successful", id: userRecord.uid });
+        res.status(200).json({ message: "user registration successful" });
 
     } catch (error) {
         console.error('Error registering user:', error);
@@ -27,10 +27,10 @@ const signup = async (req, res) => {
 }
 
 const signin = async (req, res) => {
-    const { username, password } = req.body
+    const { email, password } = req.body
     try {
         // Fetch the user document using the username
-        const userSnapshot = await User.where('username', '==', username).get();
+        const userSnapshot = await User.where('email', '==', email).get();
 
         if (userSnapshot.empty) {
             return res.status(401).json({ error: 'Invalid username or password' });
@@ -58,6 +58,7 @@ const signin = async (req, res) => {
             id: userDoc.id,
             username: user.username,
             email: user.email,
+            password: password,
             token: token
         });
     } catch (error) { 
@@ -114,10 +115,10 @@ const signupWithSSO = async (req, res) => {
 
 
 const signinWithSSO = async (req, res) => { 
-    const { username } = req.body;
+    const { email } = req.body;
     try {
         // Fetch the user document using the username
-        const userSnapshot = await User.where('username', '==', username).get();
+        const userSnapshot = await User.where('email', '==', email).get();
 
         if (userSnapshot.empty) {
             return res.status(401).json({ error: 'Invalid username or password' });
