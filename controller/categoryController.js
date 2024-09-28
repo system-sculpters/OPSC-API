@@ -1,4 +1,4 @@
-const { Category } = require('../config')
+const { Category, Transaction } = require('../config')
 
 const getCategories = async (req, res) =>{
     const {id} = req.params
@@ -69,7 +69,7 @@ const updateCategory = async (req, res) =>{
 const deleteCategory = async (req, res) => {
     const { id } = req.params; // ID of the category to be deleted
     const uncategorizedCategoryId = 'wEijTYKaY8738zHM4oJb'; 
-    
+
     try {
         // Check if the "Uncategorized" category exists
         const uncategorizedRef = Category.doc(uncategorizedCategoryId);

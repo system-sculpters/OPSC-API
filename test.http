@@ -95,8 +95,8 @@ content-type: application/json
 }
 
 ###
-DELETE  http://localhost:3001/api/category/nwz5ukswrZteheSd2Wos HTTP/1.1
-
+DELETE  http://localhost:3001/api/category/FZRXoxWfekppMBs9tXff HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIwQXFad3BxWDJzZWVjbjY4NTVsbFR3bG5yOUoyIiwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcyNzU1NTIyNCwiZXhwIjoxNzI3ODE0NDI0fQ.H9id0Q-Ag29iha7cKEUyYh1ZjVjW58uF6fC6Cen4NtE
 
 ###
 GET http://localhost:3001/api/transaction/0AqZwpqX2seecn6855llTwlnr9J2 HTTP/1.1
