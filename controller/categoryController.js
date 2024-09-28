@@ -66,17 +66,46 @@ const updateCategory = async (req, res) =>{
 }
 
 
-const deleteCategory = async (req, res) =>{
-    const { id } = req.params;
+const deleteCategory = async (req, res) => {
+    const { id } = req.params; // ID of the category to be deleted
+    const uncategorizedCategoryId = 'wEijTYKaY8738zHM4oJb'; 
+    
     try {
+        // Check if the "Uncategorized" category exists
+        const uncategorizedRef = Category.doc(uncategorizedCategoryId);
+        const uncategorizedSnapshot = await uncategorizedRef.get();
+
+        if (!uncategorizedSnapshot.exists) {
+            return res.status(400).json({ error: '"Uncategorized" category does not exist.' });
+        }
+
+        // Get all transactions linked to the category being deleted
+        const snapshot = await Transaction
+            .where('categoryId', '==', id)
+            .get();
+
+        const batch = Transaction.firestore.batch();
+
+        // Reassign all transactions to "Uncategorized"
+        snapshot.docs.forEach((doc) => {
+            const transactionRef = Transaction.doc(doc.id);
+            batch.update(transactionRef, { categoryId: uncategorizedCategoryId });
+        });
+
+        // Commit the batch update
+        await batch.commit();
+
+        // Delete the original category after reassignment
         const categoryRef = Category.doc(id);
         await categoryRef.delete();
-        res.status(200).json({ message: 'Category deleted successfully.' });
+
+        res.status(200).json({ message: 'Category deleted and transactions reassigned to "Uncategorized".' });
     } catch (error) {
-        console.error('Error deleting category:', error);
-        res.status(500).json({ error: 'Failed to delete category' });
+        console.error('Error deleting category and reassigning transactions to "Uncategorized":', error);
+        res.status(500).json({ error: 'Failed to delete category and reassign transactions' });
     }
-}
+};
+
 
 
 module.exports = { getCategories, createCategory, updateCategory, deleteCategory }

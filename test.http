@@ -13,7 +13,7 @@ POST http://localhost:3001/api/auth/signin HTTP/1.1
 content-type: application/json
 
 {
-    "username": "user 1",
+    "email": "user@gmail.com",
     "password": "user123"
 } 
 
@@ -23,7 +23,7 @@ POST http://localhost:3001/api/auth/signin-sso HTTP/1.1
 content-type: application/json
 
 {
-    "username": "user 1",
+    "username": "user@gmail.com",
     "password": "user123"
 } 
 

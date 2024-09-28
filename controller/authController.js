@@ -31,7 +31,7 @@ const signin = async (req, res) => {
     try {
         // Fetch the user document using the username
         const userSnapshot = await User.where('email', '==', email).get();
-
+ 
         if (userSnapshot.empty) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
