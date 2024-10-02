@@ -2,8 +2,8 @@ POST http://localhost:3001/api/auth/signup HTTP/1.1
 content-type: application/json
 
 {
-    "username": "user 1",
-    "email": "user@gmail.com",
+    "username": "samTest",
+    "email": "samen@gmail.com",
     "password": "user123"
 }
 
