@@ -107,5 +107,29 @@ const deleteCategory = async (req, res) => {
 };
 
 
+const batchAddCategories = async (req, res) =>{
+    const categories = req.body.categories; // Expecting an array of category objects
 
-module.exports = { getCategories, createCategory, updateCategory, deleteCategory }
+    try {
+        // Perform batch write in Firebase
+        categories.forEach(category => {
+            const newCategoryRef = Category.doc(); // Create a new document reference
+            batch.set(newCategoryRef, {
+                color: category.color,
+                icon: category.icon,
+                name: category.name,
+                transactiontype: category.transactiontype,
+                userid: category.userid,
+                createdAt: Date.now()
+            });
+        });
+
+        await batch.commit(); // Commit the batch operation
+        res.status(201).json({ message: `${categories.length} categories added successfully.` });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+
+module.exports = { getCategories, createCategory, updateCategory, deleteCategory, batchAddCategories }

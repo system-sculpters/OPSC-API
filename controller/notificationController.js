@@ -33,32 +33,57 @@ const notifyUser = async (userid, title, body) => {
         }
     } catch (error) {
         console.error('Error notifying user:', error);
+        throw new Error('Failed to notify user');
     }
 }
  
-const createNotification = async (req, res) => {
-    const { userid, title, message } = req.body;
+// const createNotification = async (req, res) => {
+//     const { userid, title, message } = req.body;
 
+//     try {
+//         // Create a new notification document in Firestore
+//         const newNotificationRef = Notification.doc(); // Create a new document with a unique ID
+//         await newNotificationRef.set({
+//             userid,
+//             title,
+//             message,
+//             status: false, 
+//             createdAt: new Date()
+//         });
+
+//         // Optionally notify the user via FCM
+//         await notifyUser(userid, title, message);
+
+//         res.status(201).json({ message: 'Notification created successfully' });
+//     } catch (error) {
+//         console.error('Error creating notification:', error);
+//         res.status(500).json({ error: 'Failed to create notification' });
+//     }
+// }
+
+const createNotification = async (userid, title, message) => {
+   
     try {
         // Create a new notification document in Firestore
-        const newNotificationRef = Notification.doc(); // Create a new document with a unique ID
-        await newNotificationRef.set({
-            userid,
+        const newNotification = {
+            userid, 
             title,
             message,
             status: false, 
-            createdAt: new Date()
-        });
+            createdAt: Date.now()
+        };
 
-        // Optionally notify the user via FCM
-        await notifyUser(userid, title, message);
-
-        res.status(201).json({ message: 'Notification created successfully' });
+        await Notification.add( newNotification );
+         
+        console.log('Notification created successfully')
+        return { success: true }; // Return success
+        //res.status(201).json({ message: 'Notification created successfully' });
     } catch (error) {
         console.error('Error creating notification:', error);
-        res.status(500).json({ error: 'Failed to create notification' });
+        return { success: false }; // Return success
+        //res.status(500).json({ error: 'Failed to create notification' });
     }
-}
+} 
 
 
 const getNotifications = async (req, res) => {
@@ -69,12 +94,12 @@ const getNotifications = async (req, res) => {
         const snapshot = await notificationsRef.get();
 
         if (snapshot.empty) {
-        return res.status(404).json({ message: 'No notifications found' });
+            return res.status(404).json({ message: 'No notifications found' });
         }
 
         const notifications = [];
         snapshot.forEach(doc => {
-        notifications.push({ id: doc.id, ...doc.data() });
+            notifications.push({ id: doc.id, ...doc.data() });
         });
 
         res.status(200).json(notifications);
@@ -99,17 +124,26 @@ const markAsRead = async (req, res) => {
 }
 
 const registerToken = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     const { fcmToken } = req.body;
 
     try {
-        await User.doc(id).update({ fcmToken });
+        const userRef = User.doc(id);
+        const userDoc = await userRef.get();
+
+        if (!userDoc.exists) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await userRef.update({ fcmToken });
         res.status(200).json({ message: 'FCM token registered successfully' });
     } catch (error) {
         console.error('Error registering FCM token:', error);
         res.status(500).json({ error: 'Failed to register FCM token' });
     }
 };
+
+
 
 
 module.exports = { createNotification, getNotifications, markAsRead, registerToken };

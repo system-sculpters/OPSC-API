@@ -27,7 +27,8 @@ const createGoal = async (req, res) =>{
         deadline,
         name,
         targetamount,
-        userid
+        userid,
+        notify
     } = req.body;  
 
     const createdAt = Date.now()
@@ -44,8 +45,18 @@ const createGoal = async (req, res) =>{
             createdAt: createdAt
         }
         await Goal.add( newGoal );
-        //res.status(201).json({ message: 'Goal created successfully.' });
-        res.send({ msg: "User Added" });
+
+        if(notify){
+            const title = 'New Goal Created';
+            const message = `Your goal '${name}' has been created successfully.`;
+            const notificationResult = await createNotification(userid, title, message)
+            if (!notificationResult.success) {
+                console.error('Notification creation failed');
+                // Optionally: Handle the error or inform the user
+            }
+        }
+        res.status(201).json({ message: 'Goal created successfully.' });
+        //res.send({ msg: "User Added" });
     } catch (error) {
         console.error('Error creating Goal:', error);
         res.status(500).json({ error: 'Failed to create Goal' });
