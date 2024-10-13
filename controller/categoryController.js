@@ -110,6 +110,10 @@ const deleteCategory = async (req, res) => {
 const batchAddCategories = async (req, res) =>{
     const categories = req.body.categories; // Expecting an array of category objects
 
+    console.log(`categories: ${categories}`)
+    if (!categories || !Array.isArray(categories)) {
+        return res.status(400).json({ success: false, message: 'Invalid input. Expected an array of categories.' });
+    }
     try {
         // Perform batch write in Firebase
         categories.forEach(category => {
