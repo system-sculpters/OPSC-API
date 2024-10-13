@@ -1,4 +1,4 @@
-const { Category, Transaction } = require('../config')
+const { Category, Transaction, batch } = require('../config')
 
 const getCategories = async (req, res) =>{
     const {id} = req.params

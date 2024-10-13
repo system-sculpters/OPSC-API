@@ -22,6 +22,7 @@ const firebaseConfig = {
 
   const auth = firebase.auth();
   const db = firebase.firestore()
+  const batch = db.batch()
   
   const User = db.collection('Users')
   const Transaction = db.collection('Transactions')
@@ -30,4 +31,4 @@ const firebaseConfig = {
   const Notification = db.collection('Notifications')
   const Investment = db.collection('Investments')
 
-  module.exports = { auth, admin, User, Transaction, Category, Goal, Notification, Investment };
+  module.exports = { auth, admin, batch, User, Transaction, Category, Goal, Notification, Investment };
